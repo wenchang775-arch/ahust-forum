@@ -120,25 +120,17 @@ export default {
       
       loading.value = true
       try {
-        const token = localStorage.getItem('token')
+        // 收集已上传图片的ID
+        const imageIds = uploadedImages.value.map(img => img.id).filter(Boolean)
         
-        // 1. 先创建帖子
-        const postResponse = await apiClient.post('/api/posts', form, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        const postId = postResponse.data.id
-        
-        // 2. 如果有上传的图片，更新图片关联到帖子
-        if (uploadedImages.value.length > 0) {
-          for (const image of uploadedImages.value) {
-            await apiClient.post('/api/upload', {
-              post_id: postId,
-              image_id: image.id
-            }, {
-              headers: { Authorization: `Bearer ${token}` }
-            })
-          }
+        // 创建帖子（包含图片关联）
+        const postData = { ...form }
+        if (imageIds.length > 0) {
+          postData.image_ids = imageIds
         }
+        
+        const postResponse = await apiClient.post('/api/posts', postData)
+        const postId = postResponse.data.id
         
         ElMessage.success('发布成功')
         router.push(`/post/${postId}`)

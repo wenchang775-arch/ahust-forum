@@ -49,7 +49,8 @@ export default {
     const uploadedImages = ref([])
     
     const uploadUrl = computed(() => {
-      return '/api/upload'
+      const apiUrl = process.env.VUE_APP_API_URL || ''
+      return `${apiUrl}/api/upload`
     })
     
     const uploadHeaders = computed(() => {

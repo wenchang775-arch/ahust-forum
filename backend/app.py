@@ -399,21 +399,32 @@ def create_post():
     title = data.get('title')
     content = data.get('content')
     board_id = data.get('board_id')
+    image_ids = data.get('image_ids', [])
     
     if not all([title, content, board_id]):
         return jsonify({'error': '请填写完整信息'}), 400
     
     conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO posts (title, content, user_id, board_id)
-        VALUES (?, ?, ?, ?)
-    ''', (title, content, user_id, board_id))
-    conn.commit()
-    post_id = cursor.lastrowid
-    conn.close()
-    
-    return jsonify({'id': post_id, 'message': '发布成功'}), 201
+    try:
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO posts (title, content, user_id, board_id)
+            VALUES (?, ?, ?, ?)
+        ''', (title, content, user_id, board_id))
+        conn.commit()
+        post_id = cursor.lastrowid
+        
+        # 关联图片到帖子
+        if image_ids:
+            for image_id in image_ids:
+                cursor.execute('''
+                    UPDATE images SET post_id = ? WHERE id = ? AND user_id = ?
+                ''', (post_id, image_id, user_id))
+            conn.commit()
+        
+        return jsonify({'id': post_id, 'message': '发布成功'}), 201
+    finally:
+        conn.close()
 
 @app.route('/api/posts/<int:post_id>/comments', methods=['POST'])
 @jwt_required()
