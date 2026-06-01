@@ -616,6 +616,8 @@ def get_post_images(post_id):
 def uploaded_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
+# 初始化数据库
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     app.run(debug=True, host='0.0.0.0', port=5000)
