@@ -65,7 +65,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import axios from 'axios'
+import apiClient from '@/api'
 import ImageUploader from '../components/ImageUploader.vue'
 
 export default {
@@ -103,7 +103,7 @@ export default {
     
     const fetchBoards = async () => {
       try {
-        const response = await axios.get('/api/boards')
+        const response = await apiClient.get('/api/boards')
         boards.value = response.data
       } catch (error) {
         console.error('获取板块失败:', error)
@@ -123,7 +123,7 @@ export default {
         const token = localStorage.getItem('token')
         
         // 1. 先创建帖子
-        const postResponse = await axios.post('/api/posts', form, {
+        const postResponse = await apiClient.post('/api/posts', form, {
           headers: { Authorization: `Bearer ${token}` }
         })
         const postId = postResponse.data.id
@@ -131,7 +131,7 @@ export default {
         // 2. 如果有上传的图片，更新图片关联到帖子
         if (uploadedImages.value.length > 0) {
           for (const image of uploadedImages.value) {
-            await axios.post('/api/upload', {
+            await apiClient.post('/api/upload', {
               post_id: postId,
               image_id: image.id
             }, {

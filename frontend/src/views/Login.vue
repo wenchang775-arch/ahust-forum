@@ -53,7 +53,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
-import axios from 'axios'
+import apiClient from '@/api'
 
 export default {
   name: 'Login',
@@ -84,7 +84,7 @@ export default {
       
       loading.value = true
       try {
-        const response = await axios.post('/api/login', form)
+        const response = await apiClient.post('/api/login', form)
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('user', JSON.stringify(response.data.user))
         ElMessage.success('登录成功')

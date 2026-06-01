@@ -53,7 +53,7 @@
 <script>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import axios from 'axios'
+import apiClient from '@/api'
 import PostCard from '../components/PostCard.vue'
 
 export default {
@@ -77,7 +77,7 @@ export default {
       
       loading.value = true
       try {
-        const response = await axios.get('/api/search', {
+        const response = await apiClient.get('/api/search', {
           params: {
             q: keyword.value,
             page: page.value,

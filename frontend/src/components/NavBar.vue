@@ -60,7 +60,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import axios from 'axios'
+import apiClient from '@/api'
 
 export default {
   name: 'NavBar',
@@ -78,7 +78,7 @@ export default {
       if (!token) return
       
       try {
-        const response = await axios.get('/api/user', {
+        const response = await apiClient.get('/api/user', {
           headers: { Authorization: `Bearer ${token}` }
         })
         user.value = response.data

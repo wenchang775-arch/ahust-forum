@@ -135,7 +135,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import axios from 'axios'
+import apiClient from '@/api'
 
 export default {
   name: 'PostDetail',
@@ -154,7 +154,7 @@ export default {
     
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`/api/posts/${route.params.id}`)
+        const response = await apiClient.get(`/api/posts/${route.params.id}`)
         post.value = response.data
         // 获取帖子图片
         await fetchPostImages()
@@ -167,7 +167,7 @@ export default {
     
     const fetchPostImages = async () => {
       try {
-        const response = await axios.get(`/api/posts/${route.params.id}/images`)
+        const response = await apiClient.get(`/api/posts/${route.params.id}/images`)
         postImages.value = response.data
       } catch (error) {
         console.error('获取帖子图片失败:', error)
@@ -187,7 +187,7 @@ export default {
       
       try {
         const token = localStorage.getItem('token')
-        await axios.post(`/api/posts/${post.value.id}/like`, {}, {
+        await apiClient.post(`/api/posts/${post.value.id}/like`, {}, {
           headers: { Authorization: `Bearer ${token}` }
         })
         post.value.like_count++
@@ -207,7 +207,7 @@ export default {
       submitting.value = true
       try {
         const token = localStorage.getItem('token')
-        await axios.post(`/api/posts/${post.value.id}/comments`, {
+        await apiClient.post(`/api/posts/${post.value.id}/comments`, {
           content: newComment.value
         }, {
           headers: { Authorization: `Bearer ${token}` }

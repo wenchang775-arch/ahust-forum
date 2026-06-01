@@ -45,7 +45,7 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue'
-import axios from 'axios'
+import apiClient from '@/api'
 import BoardCard from '../components/BoardCard.vue'
 import PostCard from '../components/PostCard.vue'
 
@@ -67,7 +67,7 @@ export default {
     
     const fetchBoards = async () => {
       try {
-        const response = await axios.get('/api/boards')
+        const response = await apiClient.get('/api/boards')
         boards.value = response.data
       } catch (error) {
         console.error('获取板块失败:', error)
@@ -76,7 +76,7 @@ export default {
     
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('/api/posts', {
+        const response = await apiClient.get('/api/posts', {
           params: { page: page.value, per_page: 20 }
         })
         posts.value = response.data.posts
@@ -89,7 +89,7 @@ export default {
       loading.value = true
       page.value++
       try {
-        const response = await axios.get('/api/posts', {
+        const response = await apiClient.get('/api/posts', {
           params: { page: page.value, per_page: 20 }
         })
         posts.value.push(...response.data.posts)

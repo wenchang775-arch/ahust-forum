@@ -72,7 +72,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { User, Lock, Message } from '@element-plus/icons-vue'
-import axios from 'axios'
+import apiClient from '@/api'
 
 export default {
   name: 'Register',
@@ -122,7 +122,7 @@ export default {
       
       loading.value = true
       try {
-        const response = await axios.post('/api/register', {
+        const response = await apiClient.post('/api/register', {
           username: form.username,
           email: form.email,
           password: form.password

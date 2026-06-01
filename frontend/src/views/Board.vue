@@ -47,7 +47,7 @@
 <script>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import axios from 'axios'
+import apiClient from '@/api'
 import PostCard from '../components/PostCard.vue'
 import { School, Reading, UserFilled, Goods, Briefcase, StarFilled } from '@element-plus/icons-vue'
 
@@ -80,7 +80,7 @@ export default {
     
     const fetchBoard = async () => {
       try {
-        const response = await axios.get('/api/boards')
+        const response = await apiClient.get('/api/boards')
         board.value = response.data.find(b => b.id === parseInt(route.params.id))
       } catch (error) {
         console.error('获取板块信息失败:', error)
@@ -89,7 +89,7 @@ export default {
     
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('/api/posts', {
+        const response = await apiClient.get('/api/posts', {
           params: {
             board_id: route.params.id,
             page: page.value,
